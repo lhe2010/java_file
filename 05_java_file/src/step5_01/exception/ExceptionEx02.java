@@ -1,5 +1,5 @@
 // 2020-10-21 수요일 3교시 설명2 
-package step05_01.exception;
+package step5_01.exception;
 /*
  * finally
  * 예외발생과 상관없이 무조건 실행할 명령어를 작성한다. 

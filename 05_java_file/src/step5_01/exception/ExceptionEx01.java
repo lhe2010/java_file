@@ -1,5 +1,5 @@
 // 2020-10-21 수요일 3교시 설명 
-package step05_01.exception;
+package step5_01.exception;
 /*
  * 예외 (Exception) 처리
  * 심각한 오류를 발생시킬 수 있는 내용은
