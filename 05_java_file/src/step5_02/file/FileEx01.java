@@ -14,10 +14,9 @@ public class FileEx01 {
 		FileWriter fw = null; 			// 분할하여 try 밖에서 선언하고 안에서 생성 (bc. try안에 만든경우 finally에서 접근불가) 
 		try {
 			// 파일입출력은 try-catch없이 사용하지 못하게 강제성을 부여해 놓았다. 
-			// 
 			
 			fw = new FileWriter(fileName);		// 파일 객체 생성
-			fw.write("파일 저장하기 연습문제"); // 파일에 input (위에서 형식만들어서 한번에 write하는것 추천)
+			fw.write("파일 저장하기 연습문제"); // 파일에 input (위에서 형식만들어서 한번에 write하는것이 가독성UP)
 												// 1) 문자열 데이터 형식만 가능하다. 
 												// 2) 개행기능이 없기 때문에 \n을 의도적으로 작성해야한다. 
 			fw.close(); 						// [중요] 파일 객체 종료 (습관***)
