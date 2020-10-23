@@ -1,12 +1,14 @@
 // 2020-10-23 금 2교시 16:33-17:09 ( 1-4 번 )
 // 2020-10-23 금 3교시 17:09-17:40 ( 5-8 번 )
 // 2020-10-23 금 3교시 17:40-17:45 ( 9 번 )
+// 2020-10-23 금 자습 19:39-19:59 ( 10 번 ) / 20:00-20:12 (2번 보완)
 package step5_02.file;
 
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
+import java.util.Arrays;
 import java.util.Scanner;
 
 //# 파일 컨트롤러[2단계] : ATM
@@ -31,12 +33,13 @@ public class FileEx07_정답 {
 		String[]  pws = new String[SIZE];
 		int[]  moneys = new int[SIZE];
 		
-		int accsCnt = 2;			// test용2 원래0
+		int accsCnt = 0;
+//		int accsCnt = 2;			// test용
 		int identifier = -1;
 		int money = 0;
 		
-		accs[0] = "1"; pws[0] = "11"; moneys[0] = 1000;
-		accs[1] = "2"; pws[1] = "22"; moneys[1] = 1000;
+//		accs[0] = "1"; pws[0] = "11"; moneys[0] = 1000;
+//		accs[1] = "2"; pws[1] = "22"; moneys[1] = 1000;
 		
 		while(true) {
 			
@@ -99,12 +102,25 @@ public class FileEx07_정답 {
 					System.out.print("탈퇴하기 위해서는 비밀번호를 다시 입력하셔야 합니다 : ");
 					String temp = scan.next();
 					if (pws[identifier].equals(temp)) {
-						// 아이디 비번 날리기 // ******* 미완성
-						accs[identifier] = null;
-						pws[identifier] = null;
-						moneys[identifier] = 0;
+						// 아이디 비번 날리기 
+						String[] tempAccs = new String[SIZE];
+						String[] tempPws = new String[SIZE];
+						int[] tempInt = new int[SIZE];
+						for (int i = 0; i < identifier; i++) {
+							tempAccs[i] = accs[i]; 
+							tempInt[i] = moneys[i];
+							tempPws[i] = pws[i];
+						}
+						for (int i = identifier+1; i < accsCnt; i++) {
+							tempAccs[i-1] = accs[i];
+							tempInt[i-1] = moneys[i];
+							tempPws[i-1] = pws[i];
+						}
+						accs = tempAccs;
+						pws = tempPws;
+						moneys = tempInt;
 						accsCnt--;
-								
+						
 						identifier = -1;
 						System.out.println("[회원탈퇴완료] 자동 로그아웃됩니다. ");
 					} else {
@@ -241,9 +257,42 @@ public class FileEx07_정답 {
 				System.out.println("[저장완료]");
 			}
 			else if (sel == 10) {	// 로드
-				if(identifier == -1) {
-					System.out.println("[ERROR] 로그인 하셔야 접근 가능한 페이지입니다.");
-					continue;
+//				if(identifier == -1) {
+//					System.out.println("[ERROR] 로그인 하셔야 접근 가능한 페이지입니다.");
+//					continue;
+//				}
+				String temp = "";
+				String data = "";
+				int tempIdx = -1;
+			
+				if(file.exists()) {
+					try {
+						fr = new FileReader(file);
+						br = new BufferedReader(fr);
+						
+						while(true) {
+							temp = br.readLine();
+							if(temp == null) {
+								break;
+							}
+							tempIdx++;
+							String[] tempArr = temp.split("/");
+							accs[tempIdx] = tempArr[0];
+							pws[tempIdx] = tempArr[1];
+							moneys[tempIdx] = Integer.parseInt(tempArr[2]);
+						}
+						accsCnt = tempIdx + 1;
+						br.close();
+						fr.close();
+						
+//						System.out.println(Arrays.toString(accs));
+//						System.out.println(Arrays.toString(pws));
+//						System.out.println(Arrays.toString(moneys));
+					} catch (Exception e) {
+						e.printStackTrace();
+					}
+				} else {
+					System.out.println("[ERROR] 존재하지 않는 파일 ");
 				}
 			}
 			else if (sel == 0) { 	// 종료
