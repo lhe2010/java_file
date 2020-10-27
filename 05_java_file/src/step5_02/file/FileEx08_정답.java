@@ -4,6 +4,7 @@
 
 package step5_02.file;
 
+import java.io.FileWriter;
 import java.util.Scanner;
 
 /*# 파일 컨트롤러[3단계] : 장바구니
@@ -30,6 +31,7 @@ public class FileEx08_정답 {
 		Scanner scan = new Scanner(System.in);
 
 		String fileName = "jang.txt";
+		FileWriter fw = null;
 
 		String[] ids = {"qwer", "javaking", "abcd"};
 		String[] pws = {"1111",   "2222", "3333"};
@@ -39,6 +41,7 @@ public class FileEx08_정답 {
 		int count = 0;
 		int log = -1;
 		int identifier = -1; 
+		int[] itemCnt = new int[3];
 
 		while (true) {
 			System.out.println("\n[MEGA SHOP] ");
@@ -119,6 +122,8 @@ public class FileEx08_정답 {
 					// 올바른 아이템 목록 확인 
 					jang[count][0] = identifier;
 					jang[count][1] = choice-1;
+					itemCnt[choice-1]++;
+					count++;
 					System.out.printf("...%s님이 %s를 장바구니에 넣었습니다. \n\n", ids[jang[count][0]], items[jang[count][1]]);
 				}
 			}
@@ -130,15 +135,27 @@ public class FileEx08_정답 {
 				}
 				// 장바구니 출력
 				for (int i = 0; i < items.length; i++) {
-					for (int j = 0; j < count; j++) {
-						
-					}
-					System.out.printf("%d) %s : %d개\n", i+1, items[i], 1 );
+					System.out.printf("%d) %s : %d개\n", i+1, items[i], itemCnt[i] );
 				}
-			}
-			else if (sel == 5) {
+			} else if (sel == 5) {
 				System.out.println("[5]저장");
-				
+				try {
+					fw = new FileWriter(fileName);
+					String data = "";
+					for (int i = 0; i < count; i++) {
+						String temp = "";
+						temp = jang[i][0] + "," + jang[i][1] + "\n";
+						data += temp;
+					}
+					
+					System.out.println(data);
+					fw.write(data);
+					
+					fw.close();
+					
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
 			}
 			else if (sel == 6) {
 				System.out.println("[6]로드");
