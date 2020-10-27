@@ -1,10 +1,15 @@
 // 2020-10-23 금 자습 20:13-20:34 ( 1-2 번 )
 // 2020-10-26 월 2교시 15:50-16:09 ( 3-4 번 )
-// 2020-10-26 월 3교시 16:51- (  번 )
+// 2020-10-27 월 3교시 20:22-21:15 ( ~완성 )
 
 package step5_02.file;
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
 import java.io.FileWriter;
+import java.io.IOException;
 import java.util.Scanner;
 
 /*# 파일 컨트롤러[3단계] : 장바구니
@@ -31,7 +36,10 @@ public class FileEx08_정답 {
 		Scanner scan = new Scanner(System.in);
 
 		String fileName = "jang.txt";
+		File file = new File(fileName);
 		FileWriter fw = null;
+		FileReader fr = null;
+		BufferedReader br = null;
 
 		String[] ids = {"qwer", "javaking", "abcd"};
 		String[] pws = {"1111",   "2222", "3333"};
@@ -57,6 +65,11 @@ public class FileEx08_정답 {
 			
 			if (sel == 1) {
 				System.out.println("\n...[1]로그인메뉴");
+				//
+				identifier = 0;
+				usrPw = "1111";
+				continue;
+				/*
 				if(identifier != -1) {
 					System.out.println("[ERROR] 이미 로그인하셨습니다.");
 					continue;
@@ -83,9 +96,8 @@ public class FileEx08_정답 {
 						// 아이디와 비밀번호가 유효하므로 로그인
 						System.out.println("...LOGGED IN");
 					}
-				}
-			}
-			else if (sel == 2) {
+				}*/
+			} else if (sel == 2) {
 				System.out.println("\n...[2]로그아웃");
 				if(identifier == -1) {
 					System.out.println("[ERROR] 로그인이후 이용가능 ");
@@ -108,9 +120,9 @@ public class FileEx08_정답 {
 						System.out.println(i+1 + ") " + items[i]);
 					}
 					System.out.println(items.length+1 + ") 뒤로가기");
-					System.out.println("상품을 선택하세요: ");
-					
+					System.out.print("상품을 선택하세요: ");
 					int choice = scan.nextInt();
+					
 					if(choice == 4) { // 뒤로가기
 						System.out.println("...메인메뉴로 이동합니다.");
 						break;						
@@ -121,10 +133,12 @@ public class FileEx08_정답 {
 					}
 					// 올바른 아이템 목록 확인 
 					jang[count][0] = identifier;
-					jang[count][1] = choice-1;
+					jang[count][1] = choice;
+					System.out.printf("...%s님이 %s를 장바구니에 넣었습니다. \n\n", ids[jang[count][0]], items[jang[count][1]-1]);
+					System.out.printf("jang[%d][0] = %d\n", count, + jang[count][0]);
+					System.out.printf("jang[%d][1] = %d\n", count, jang[count][1]);
 					itemCnt[choice-1]++;
 					count++;
-					System.out.printf("...%s님이 %s를 장바구니에 넣었습니다. \n\n", ids[jang[count][0]], items[jang[count][1]]);
 				}
 			}
 			else if (sel == 4) {
@@ -138,28 +152,49 @@ public class FileEx08_정답 {
 					System.out.printf("%d) %s : %d개\n", i+1, items[i], itemCnt[i] );
 				}
 			} else if (sel == 5) {
-				System.out.println("[5]저장");
+				System.out.println("[5]저장메뉴 ");
 				try {
 					fw = new FileWriter(fileName);
 					String data = "";
+					String temp = "";
 					for (int i = 0; i < count; i++) {
-						String temp = "";
-						temp = jang[i][0] + "," + jang[i][1] + "\n";
+						temp = (Integer.toString(jang[i][0]) + "," + Integer.toString(jang[i][1]) + "\n");
 						data += temp;
 					}
-					
-					System.out.println(data);
 					fw.write(data);
-					
 					fw.close();
 					
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
-			}
-			else if (sel == 6) {
-				System.out.println("[6]로드");
-				
+			} else if (sel == 6) {
+				System.out.println("[6]로드메뉴 ");
+				if(file.exists()) {
+					try {
+						fr = new FileReader(file);
+						br = new BufferedReader(fr);
+					
+						String temp = br.readLine();
+						String data2 = "";
+						while(temp != null) {
+							data2 += temp;
+							data2 += "\n";
+							temp = br.readLine();
+						}
+						br.close();
+						fr.close();
+						
+						count = data2.split("\n").length;
+						for (int i = 0; i < count; i++) {
+							jang[i][0] = Integer.parseInt(data2.split("\n")[i].split(",")[0]);
+							jang[i][1] = Integer.parseInt(data2.split("\n")[i].split(",")[1]);
+//							System.out.printf("%d,%d\n", jang[i][0], jang[i][1]);
+							itemCnt[jang[i][1]-1]++;
+						}
+					} catch (IOException e) {
+						e.printStackTrace();
+					}
+				}
 			}
 			else if (sel == 0) {
 				System.out.println("[0][프로그램 종료]");
